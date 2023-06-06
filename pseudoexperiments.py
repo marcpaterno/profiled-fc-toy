@@ -4,7 +4,9 @@ Generate and fit a toy pseudoexperiment.
 
 import math
 import random
+import numpy
 from numpy.random import default_rng
+import scipy
 
 random.seed(137)  # for reproducibility
 np_rng = default_rng(12345)  # for reproducibility
@@ -30,6 +32,43 @@ N_b = 20
 OBS = [7, 4, 4, 3, 4, 6, 5, 3, 6, 5, 4, 1, 3, 0, 1, 1, 2, 0, 1, 0]
 
 
+class LogLike:
+    """LogLike is an encapsulation of the (negative) log likelihood function.
+    It contains as state the "data" for which this is the likelihood."""
+
+    def __init__(self, data):
+        self.data = data
+
+    def __call__(self, x):
+        """Return the negative log likelihood for the encapsulated data,
+        for the given set of parameter values in the numpy array `x`.
+        N.B.: This is grossly inefficient, and is only being done
+        here to keep most of the code in 'normal' Python, rather than using
+        numpy.
+        """
+        return self.negative_log_likelihood(*list(x))
+
+    def negative_log_likelihood(self, a, b, c, d, mass, delta):
+        """Return the value of lambda for given set of model parameters,
+        and for the fixed data in OBS.
+
+        Note that having the data fixed in OBS is a clear hack. One more robust
+        solution would be to introduce as class, to have those data in an
+        instance variable, and to make this function into a method of the
+        class.
+        """
+        bin_poisson_means = [
+            poisson_mean_model(a, b, c, d, mass, delta, k)
+            for k in range(1, N_b + 1)
+        ]
+
+        bin_log_likelihoods = [
+            mu - d * math.log(mu) + math.log(numpy.math.factorial(d))
+            for mu, d in zip(bin_poisson_means, self.data)
+        ]
+        return sum(bin_log_likelihoods)
+
+
 def poisson_mean_model(a, b, c, d, mass, delta, k):
     """Generate the Poisson mean for bin k, for the given set of parameter
     values.
@@ -48,7 +87,9 @@ def generate_pseudoexperiment(m, Delta):
     current_C = random.normalvariate(C, dC)
     current_D = random.normalvariate(D, dD)
     current_means = [
-        poisson_mean_model(current_A, current_B, current_C, current_D, m, Delta, k)
+        poisson_mean_model(
+            current_A, current_B, current_C, current_D, m, Delta, k
+        )
         for k in range(1, N_b + 1)
     ]
     # We are not using numpy's ability to generate an array of variates
@@ -61,36 +102,28 @@ def generate_pseudoexperiment(m, Delta):
     return generated_counts
 
 
-def negative_log_likelihood(a, b, c, d, mass, delta):
-    """Return the value of lambda for given set of model parameters, and for
-    the fixed data in OBS.
-    """
-    # This function is not yet written
-
-
 def fit_pseudoexperiment(data):
     """Given pseudoexperiment data (a list of counts in energy bins), find the
     minimum of the negative log likelihood and return it.
     """
-<<<<<<< Local Changes
-    
-=======
-    # This function is not yet written
->>>>>>> External Changes
+    loglike = LogLike(data)
+    initial_guess = numpy.array([10.0, 5.0, 3.0, 1.0, 8.0, 2.0])
+    fit_result = scipy.optimize.minimize(loglike, initial_guess)
+    return fit_result
 
 
-def generate_one_lambda(m, Delta):
-    """Generate a single value of lambda, by generating and fitting one
-    pseudoexperiment.
+def generate_one_fit(m, Delta):
+    """Generate a single fit to the log likelihood, by generating and fitting
+    one pseudoexperiment.
     """
     pe = generate_pseudoexperiment(m, Delta)
-    lambda_pe = fit_pseudoexperiment(pe)
-    return lambda_pe
+    fit = fit_pseudoexperiment(pe)
+    return fit.fun
 
 
 if __name__ == "__main__":
     # Pick a spot in our parameter space
     m, Delta = 8.0, 2.0
 
-    lambda_pe = generate_one_lambda(m, Delta)
-    print(f"lambda: {lambda_pe}")
+    fit = generate_one_fit(m, Delta)
+    print(f"fit result: {fit}")
