@@ -47,7 +47,7 @@ usually work with the *negative* of the log of the likelihood. The
 finding of the maximum likelihood corresponds to minimization of the
 negative log likelihood:
 
-$$ \lambda = - \log({\cal L}) = \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \mu_k + \log(d_k!)  )$$
+$$ \lambda = - \log({\cal L}) = \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \log(\mu_k) + \log(d_k!)  )$$
 
 Sometimes, Stirling’s approximation for $d_k!$ is introduced here, since
 it is already quite accurate for $n=1$. The code in this repository does
