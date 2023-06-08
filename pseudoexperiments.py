@@ -36,8 +36,10 @@ class LogLike:
     """LogLike is an encapsulation of the (negative) log likelihood function.
     It contains as state the "data" for which this is the likelihood."""
 
-    def __init__(self, data):
+    def __init__(self, data, mass=None, delta=None):
         self.data = data
+        self.mass = mass
+        self.delta = delta
 
     def __call__(self, x):
         """Return the negative log likelihood for the encapsulated data,
@@ -48,14 +50,30 @@ class LogLike:
         """
         return self.negative_log_likelihood(*list(x))
 
+    def restricted_np(self, x):
+        """Return the negative log likelihood for the encapsulated data, but
+        with the mass and delta parameters fixed to specific values.
+        """
+        return self.restricted(*list(x))
+
+    def restricted(self, a, b, c, d):
+        """Return the negative log likelihood for the encapsulated data, but
+        with the mass and delta parameters fixed to specified values.
+        """
+        bin_poisson_means = [
+            poisson_mean_model(a, b, c, d, self.mass, self.delta, k)
+            for k in range(1, N_b + 1)
+        ]
+
+        bin_log_likelihoods = [
+            mu - d * math.log(mu) + math.log(numpy.math.factorial(d))
+            for mu, d in zip(bin_poisson_means, self.data)
+        ]
+        return sum(bin_log_likelihoods)
+
     def negative_log_likelihood(self, a, b, c, d, mass, delta):
         """Return the value of lambda for given set of model parameters,
         and for the fixed data in OBS.
-
-        Note that having the data fixed in OBS is a clear hack. One more robust
-        solution would be to introduce as class, to have those data in an
-        instance variable, and to make this function into a method of the
-        class.
         """
         bin_poisson_means = [
             poisson_mean_model(a, b, c, d, mass, delta, k)
@@ -102,8 +120,9 @@ def generate_pseudoexperiment(m, Delta):
     return generated_counts
 
 
-def fit_pseudoexperiment(data):
-    """Given pseudoexperiment data (a list of counts in energy bins), find the
+def fit_given_data(data):
+    """Given data (a list of counts in energy bins, either from a
+    pseudoexperiment or real observations), find the
     minimum of the negative log likelihood and return it.
     """
     loglike = LogLike(data)
@@ -112,18 +131,38 @@ def fit_pseudoexperiment(data):
     return fit_result
 
 
+def fit_given_data_at_location(mass, delta, data):
+    """Given values for m and Delta, fit the remaining parameters to the given
+    data.
+    """
+    loglike = LogLike(data, mass, delta)
+    initial_guess = numpy.array([10.0, 5.0, 3.0, 1.0])
+    fit_result = scipy.optimize.minimize(loglike.restricted_np, initial_guess)
+    return fit_result
+
+
 def generate_one_fit(m, Delta):
     """Generate a single fit to the log likelihood, by generating and fitting
     one pseudoexperiment.
     """
     pe = generate_pseudoexperiment(m, Delta)
-    fit = fit_pseudoexperiment(pe)
-    return fit.fun
+    fit = fit_given_data(pe)
+    return fit
 
 
 if __name__ == "__main__":
-    # Pick a spot in our parameter space
-    m, Delta = 8.0, 2.0
+    # Find the best fit (allowing all of the parameters, both physics and
+    # nuisance, to vary).
+    best_fit = fit_given_data(OBS)
+    assert best_fit.success
+    lambda_best = best_fit.fun
+    params_best = best_fit.x
 
-    fit = generate_one_fit(m, Delta)
-    print(f"fit result: {fit}")
+    # Pick a spot in our parameter space. At this location, we are going to
+    # go through the profiled FC procedure. The result will be a p-value
+    # (probabililty) at this location in the parameter space.
+    m_p, Delta_p = 8.0, 2.0
+
+    # Now we fix the values of m and Delta, and re-fit the *other* parameters.
+    p_fit = fit_given_data_at_location(m_p, Delta_p, OBS)
+    print(p_fit)
