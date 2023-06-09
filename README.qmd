@@ -41,15 +41,23 @@ The likelihood has a maximum where the log of the likelihood has a maximum.
 Finally, we usually work with the *negative* of the log of the likelihood.
 The finding of the maximum likelihood corresponds to minimization of the negative log likelihood.
 
-Some physicists like working with the value defined as
+Some physicists like working with the value defined as if we were working with a Gaussian likelihood, in which case the log of the likelihood would be the $\chi^2$ function.
+The typical definition of the $\chi^2$ function contains a factor of two in the log.
+The definition of $\lambda$ follows this tradition:
 
-$$ \lambda = -2 \log({\cal L}) = 2 \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \log(\mu_k) + \log(d_k!)  )$$
+$$
+\begin{aligned}
+\lambda(A, B, C, D, m, \Delta) &= -2 \log({\cal L}) \\
+                               &= 2 \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \log(\mu_k) + \log(d_k!)  )
+\end{aligned}
+$$
 
 Sometimes, Stirling's approximation for $d_k!$ is introduced here, since it is already quite accurate for $n=1$.
 The code in this repository does *not* make this approximation.
 
-Recall that $\lambda$ above is a function of the parameters of the model ($A$, $B$, $C$, $D$, $m$, and $\Delta$); these are the variables being fitted.
+Note that $\lambda$ above is a function of the parameters of the model ($A$, $B$, $C$, $D$, $m$, and $\Delta$); these are the variables being fitted.
 It is not a function of the data $\vec{d}$, which are not varied --- the data are whatever the experiment observed.
+The dependence of $\lambda$ on these parameters comes in through the dependence of each $\mu_k$ on these parameters.
 
 ### Creating simulated data
 
