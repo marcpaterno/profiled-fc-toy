@@ -28,11 +28,10 @@ Our toy physical model contains to major propositions:
     are nuisance parameters; they play a role in the “physics”, but we
     do not care about their values.
 
-3.  The likelihood that we are maximizing is:
-    $${\cal L} = \prod\limits_{k=1}^{N_b} P(d_k | \mu_k)$$ where
-    $P(d_k | \mu_k)$ is the likelihood for observing $d_k$ events in a
-    Poisson process with mean $\mu_k$:
-    $$P(d|\mu) = e^{-\mu} \mu^d / d!$$
+This means that the likelihood that we are maximizing is:
+$${\cal L} = \prod\limits_{k=1}^{N_b} P(d_k | \mu_k)$$ where
+$P(d_k | \mu_k)$ is the likelihood for observing $d_k$ events in a
+Poisson process with mean $\mu_k$: $$P(d|\mu) = e^{-\mu} \mu^d / d!$$
 
 In the real neutrino experiments, the formula for $\mu_k$ is much more
 complicated, and the likelihood has additional multiplicative terms. But
@@ -45,7 +44,9 @@ with the natural logarithm of the likelihood. The likelihood has a
 maximum where the log of the likelihood has a maximum. Finally, we
 usually work with the *negative* of the log of the likelihood. The
 finding of the maximum likelihood corresponds to minimization of the
-negative log likelihood:
+negative log likelihood.
+
+Some physicists like working with the value defined as
 
 $$ \lambda = -2 \log({\cal L}) = 2 \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \log(\mu_k) + \log(d_k!)  )$$
 
@@ -58,19 +59,24 @@ Recall that $\lambda$ above is a function of the parameters of the model
 fitted. It is not a function of the data $\vec{d}$, which are not varied
 — the data are whatever the experiment observed.
 
-## Creating simulated data
+### Creating simulated data
 
 Since we have not run a real physical experiment to collect data that we
 can fit out our model, we need to generate some. This process is similar
 (but not identical) to the process we’ll use for generating
-pseudoexperiments.
+pseudoexperiments. Note that this step is *not* part of the profiled FC
+technique; it is something we have to do because we did not actually
+perform an experiment to collect data.
 
-First we need to specify the *true* values for the model parameters.
-Note that this implies the proposition that our model is a faithful
-model of physical reality. In this work, we are not *testing* that
-proposition. We are asserting the proposition, and then given that
-assertion, we are estimating the values of the parameters of interest of
-the model.
+First we need to specify the *true* values for the model parameters. In
+the real world, we do not know the true values of the model parameters.
+But because we are making a simulation, in our simulated world we get to
+set the values. Note that this implies the proposition that our model is
+a faithful model of physical reality. For the simulated reality, this is
+true. In the real world, we do not know this is true. But in the
+profiled FC analysis, we are not *testing* that proposition. We are
+asserting the proposition, and then given that assertion, we are
+estimating the values of the parameters of interest of the model.
 
 <div id="tbl-param-truth">
 
@@ -121,3 +127,5 @@ profiling over the nuisance parameters.
 | B    |  5.16 | 0.10 |
 | C    |  3.31 | 0.60 |
 | D    |  0.76 | 0.04 |
+
+## The Profiled Feldman-Cousins calculation

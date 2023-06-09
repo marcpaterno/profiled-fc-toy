@@ -1,6 +1,7 @@
 ---
 title: A toy demonstration of the Profiled Feldman-Cousins Technique
 format: gfm
+
 execute:
   echo: false
   warning: false
@@ -32,7 +33,7 @@ Our toy physical model contains to major propositions:
    We are interested in the parameters $m$ and $\Delta$; these are the parameters we are estimating.
    The parameters $A$, $B$, $C$ and $D$ are nuisance parameters; they play a role in the "physics", but we do not care about their values.
 
-3. The likelihood that we are maximizing is:
+ This means that the likelihood that we are maximizing is:
    $${\cal L} = \prod\limits_{k=1}^{N_b} P(d_k | \mu_k)$$
    where $P(d_k | \mu_k)$ is the likelihood for observing $d_k$ events in a Poisson process with mean $\mu_k$:
    $$P(d|\mu) = e^{-\mu} \mu^d / d!$$
@@ -43,7 +44,9 @@ But the toy shared the essential feature that the likelihood for the observed da
 Because individual likelihoods can be quite small, it is common to work with the natural logarithm of the likelihood.
 The likelihood has a maximum where the log of the likelihood has a maximum.
 Finally, we usually work with the *negative* of the log of the likelihood.
-The finding of the maximum likelihood corresponds to minimization of the negative log likelihood:
+The finding of the maximum likelihood corresponds to minimization of the negative log likelihood.
+
+Some physicists like working with the value defined as
 
 $$ \lambda = -2 \log({\cal L}) = 2 \sum\limits_{k=1}^{N_b} ( \mu_k - d_k \log(\mu_k) + \log(d_k!)  )$$
 
@@ -53,14 +56,19 @@ The code in this repository does *not* make this approximation.
 Recall that $\lambda$ above is a function of the parameters of the model ($A$, $B$, $C$, $D$, $m$, and $\Delta$); these are the variables being fitted.
 It is not a function of the data $\vec{d}$, which are not varied --- the data are whatever the experiment observed.
 
-## Creating simulated data
+### Creating simulated data
 
 Since we have not run a real physical experiment to collect data that we can fit out our model, we need to generate some.
 This process is similar (but not identical) to the process we'll use for generating pseudoexperiments.
+Note that this step is *not* part of the profiled FC technique; it is something we have to do because we did not actually perform an experiment to collect data.
 
 First we need to specify the *true* values for the model parameters.
+In the real world, we do not know the true values of the model parameters.
+But because we are making a simulation, in our simulated world we get to set the values.
 Note that this implies the proposition that our model is a faithful model of physical reality.
-In this work, we are not *testing* that proposition.
+For the simulated reality, this is true.
+In the real world, we do not know this is true.
+But in the profiled FC analysis, we are not *testing* that proposition.
 We are asserting the proposition, and then given that assertion, we are estimating the values of the parameters of interest of the model.
 
 ```{r}
@@ -147,4 +155,8 @@ write_csv(nuisance_params, "nuisance.csv")
 ```{r}
 knitr::kable(nuisance_params)
 ```
+
+## The Profiled Feldman-Cousins calculation
+
+
 

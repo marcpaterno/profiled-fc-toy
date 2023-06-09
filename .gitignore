@@ -1,2 +1,7 @@
 README_files/
 local_venv/
+.Rproj.user
+README.html
+README.pdf
+.idea/
+__pycache__/
