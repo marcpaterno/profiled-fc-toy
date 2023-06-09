@@ -22,21 +22,16 @@ The entire well-motivated and more more complex physical models, and many more p
 
 Our toy physical model contains to major propositions:
 
-1. The process we are observing (the appearance of events with energy $x$ in our detector) is a Poisson process.
-   This means the observed energy spectrum (the count of events in each energy bin) is an observation of a
-   $N_b$ independent Poisson random variables, where $N_b$ is the number of bins in our spectrum.
+1.  The process we are observing (the appearance of events with energy $x$ in our detector) is a Poisson process.
+    This means the observed energy spectrum (the count of events in each energy bin) is an observation of a $N_b$ independent Poisson random variables, where $N_b$ is the number of bins in our spectrum.
 
-2. The Poisson mean $\mu_k$ for each bin $k$ (will will use $k$ to index energy bins) is:
-   $$\mu_k = A e^{(-k/B)} + \frac{C}{\Delta} e^{-\frac{1}{2} (\frac{k-m}{\Delta})^2} + D$$
+2.  The Poisson mean $\mu_k$ for each bin $k$ (will will use $k$ to index energy bins) is: $$\mu_k = A e^{(-k/B)} + \frac{C}{\Delta} e^{-\frac{1}{2} (\frac{k-m}{\Delta})^2} + D$$
 
-   $A$, $B$, $C$, $D$, $m$ and $\Delta$ each denote scalar values.
-   We are interested in the parameters $m$ and $\Delta$; these are the parameters we are estimating.
-   The parameters $A$, $B$, $C$ and $D$ are nuisance parameters; they play a role in the "physics", but we do not care about their values.
+    $A$, $B$, $C$, $D$, $m$ and $\Delta$ each denote scalar values.
+    We are interested in the parameters $m$ and $\Delta$; these are the parameters we are estimating.
+    The parameters $A$, $B$, $C$ and $D$ are nuisance parameters; they play a role in the "physics", but we do not care about their values.
 
- This means that the likelihood that we are maximizing is:
-   $${\cal L} = \prod\limits_{k=1}^{N_b} P(d_k | \mu_k)$$
-   where $P(d_k | \mu_k)$ is the likelihood for observing $d_k$ events in a Poisson process with mean $\mu_k$:
-   $$P(d|\mu) = e^{-\mu} \mu^d / d!$$
+This means that the likelihood that we are maximizing is: $${\cal L} = \prod\limits_{k=1}^{N_b} P(d_k | \mu_k)$$ where $P(d_k | \mu_k)$ is the likelihood for observing $d_k$ events in a Poisson process with mean $\mu_k$: $$P(d|\mu) = e^{-\mu} \mu^d / d!$$
 
 In the real neutrino experiments, the formula for $\mu_k$ is much more complicated, and the likelihood has additional multiplicative terms.
 But the toy shared the essential feature that the likelihood for the observed data depends upon the unknown values of the parameters, both the interesting ones and the nuisance parameters.
@@ -120,8 +115,6 @@ write_csv(data, "spectrum.csv")
 Finally, we generate $N_b$ Poisson random variates: the energy spectrum of our simulated data.
 Our (simulated) spectrum is: `r data$n`.
 
-
-
 ```{r observed_spectrum}
 #| label: fig-observed-spectrum
 #| fig-cap: Observed spectrum (for our simulated experiment).
@@ -157,6 +150,3 @@ knitr::kable(nuisance_params)
 ```
 
 ## The Profiled Feldman-Cousins calculation
-
-
-
