@@ -110,11 +110,10 @@ Note that this is a plot of the Poisson mean for each bin, not the number of obs
 
 ```{r spectrum}
 #| label: fig-true-mean
-#| fig-cap: True Poisson mean $\mu$ as a function of energy bin index. Note that we do not draw a line because the bin index takes only integer values. Note also that the Poisson mean can take non-integral values.
+#| fig-cap: True Poisson mean $\mu$ as a function of energy bin index. Note that the bin index takes only integer values. Note also that the Poisson mean can take non-integral values.
 
 ggplot(means, aes(k, mu)) +
-  geom_point() +
-  scale_y_log10() +
+  geom_col(width=1) +
   labs(x = "bin index", y = TeX("$\\mu$"))
 ```
 
@@ -171,6 +170,16 @@ The full procedure, as used to generate a single analysis plot, is to use perfor
 Preliminary to starting the procedure at a given location $p$, defined by the coordinate values $(m_p, \Delta_p)$, we first find the global minimum value of $\lambda(A,B,C,D,m,\Delta | \vec{d})$, and the location of this minimum value.
 We will call the minimum value $\lambda_B$ and the parameter values at that location $(A_B, B_B, C_B, D_B, m_B, \Delta_B$), where $B$ denotes "best fit".
 
-1.  Determine the minimimum value of $\lambda$ for the "real data" (i.e., our simulated spectrum) at the location $(m_p, \Delta_p$) by allowing the nuisance parameters $(A, B, C, D)$ to vary. We will call this minimum value $\lambda_p$. We do not care about the values of $(A, B, C, D)$ that are found for this fit, except that the values must be physically allowable. For example, none of $A$, $C$ or $D$ can be negative. It is not yet clear how this is to be enforced.
-2.  Generate $N_p$ (statistically independent) pseudoexperiments at the location $p$. Fit each pseudoxperiment the same way as was done to find $\lambda_p$, but using the generated spectrum of the pseudoexperiment rather than the "real data". We index the pseudoexperiments with index $i$, and so denote each minimum value of $\lambda$ as $\lambda_i$.
-3.  Determine the fraction of the $N_p$ pseudoexperiments that have this fitted $\lambda_i < \lambda_p$. This fraction is the probability we want for the location $p$.
+1.  Determine the minimimum value of $\lambda$ for the "real data" (i.e., our simulated spectrum) at the location $(m_p, \Delta_p$) by allowing the nuisance parameters $(A, B, C, D)$ to vary.
+We will call this minimum value $\lambda_p$.
+We do not care about the values of $(A, B, C, D)$ that are found for this fit, except that the values must be physically allowable.
+In this example, we've used absolute values in the formula for $\mu_k$ that make it so any value of $A$, $B$, $C$ or $D$ is allowable.
+2.  Generate $N_p$ (statistically independent) pseudoexperiments at the location $p$.
+Fit each pseudoxperiment the same way as was done to find $\lambda_p$, but using the generated spectrum of the pseudoexperiment rather than the "real data".
+We index the pseudoexperiments with index $i$, and so denote each minimum value of $\lambda$ as $\lambda_i$.
+3.  Determine the fraction of the $N_p$ pseudoexperiments that have this fitted $\lambda_i < \lambda_p$.
+This fraction is the probability we want for the location $p$.
+
+Note that this is one of the possible formulations of the profiled FC procedure.
+While this is not the formulation primarily described by NOvA, it is generally equivalent and is accepted by them as a means of calculation.
+This formulation does not have us calculating likelihood ratios or $\delta \chi^2$ values.

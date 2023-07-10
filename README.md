@@ -118,7 +118,7 @@ not yet simulated).
 
 <img src="README_files/figure-commonmark/fig-true-mean-1.png"
 id="fig-true-mean"
-alt="Figure 1: True Poisson mean \mu as a function of energy bin index. Note that we do not draw a line because the bin index takes only integer values. Note also that the Poisson mean can take non-integral values." />
+alt="Figure 1: True Poisson mean \mu as a function of energy bin index. Note that the bin index takes only integer values. Note also that the Poisson mean can take non-integral values." />
 
 Finally, we generate $N_b$ Poisson random variates: the energy spectrum
 of our simulated data. Our (simulated) spectrum is: 7, 4, 4, 3, 4, 6, 5,
@@ -167,9 +167,9 @@ $(A_B, B_B, C_B, D_B, m_B, \Delta_B$), where $B$ denotes “best fit”.
     allowing the nuisance parameters $(A, B, C, D)$ to vary. We will
     call this minimum value $\lambda_p$. We do not care about the values
     of $(A, B, C, D)$ that are found for this fit, except that the
-    values must be physically allowable. For example, none of $A$, $C$
-    or $D$ can be negative. It is not yet clear how this is to be
-    enforced.
+    values must be physically allowable. In this example, we’ve used
+    absolute values in the formula for $\mu_k$ that make it so any value
+    of $A$, $B$, $C$ or $D$ is allowable.
 2.  Generate $N_p$ (statistically independent) pseudoexperiments at the
     location $p$. Fit each pseudoxperiment the same way as was done to
     find $\lambda_p$, but using the generated spectrum of the
@@ -179,3 +179,9 @@ $(A_B, B_B, C_B, D_B, m_B, \Delta_B$), where $B$ denotes “best fit”.
 3.  Determine the fraction of the $N_p$ pseudoexperiments that have this
     fitted $\lambda_i < \lambda_p$. This fraction is the probability we
     want for the location $p$.
+
+Note that this is one of the possible formulations of the profiled FC
+procedure. While this is not the formulation primarily described by
+NOvA, it is generally equivalent and is accepted by them as a means of
+calculation. This formulation does not have us calculating likelihood
+ratios or $\delta \chi^2$ values.
